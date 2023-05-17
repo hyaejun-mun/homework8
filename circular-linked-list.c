@@ -41,7 +41,7 @@ int main()
 
     do
     {
-        printf("[----- [Your Name] [Student ID] -----]\n");
+        printf("[----- [Hyaejun Mun] [2019015035] -----]\n");
         printf("----------------------------------------------------------------\n");
         printf("                  Doubly Circular Linked List                   \n");
         printf("----------------------------------------------------------------\n");
@@ -312,7 +312,33 @@ int invertList(listNode *h)
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(listNode *h, int key)
 {
-
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
+    // 삽입할 노드를 동적할당한다.
+    listNode *p = (listNode *)malloc(sizeof(listNode));
+    p->key = key;
+    if (h->rlink == h) // 원소가 없으면 그냥 배치한다.
+    {
+        insertFirst(h, key);
+        return 0;
+    }
+    listNode *find = h->rlink; // 리스트를 탐색할 포인터.
+    while (find != h)
+    {
+        if (find->key > key) // 입력받은 key보다 더 큰 값이 나오면,
+        {
+            p->llink = find->llink; // 그 값을 find와 그 이전 노드 사이에 삽입한다.
+            p->rlink = find;
+            find->llink->rlink = p;
+            find->llink = p;
+            return 0;
+        }
+        find = find->rlink; // 값이 더 크지 않으면, 다음 노드로 이동한다.
+    }
+    insertLast(h, key); // 리스트를 다 돌아도 없으면, 마지막에 삽입한다.
     return 0;
 }
 
@@ -321,6 +347,28 @@ int insertNode(listNode *h, int key)
  */
 int deleteNode(listNode *h, int key)
 {
-
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
+    if (h->rlink == h) // 리스트가 비었으면 원소를 삭제할 수 없다.
+    {
+        printf("List is empty.\n");
+        return 0;
+    }
+    listNode *find = h->rlink; // 리스트를 탐색할 포인터.
+    while (find != h)
+    {
+        if (find->key == key) // 입력받은 key와 같은 노드가 나오면,
+        {
+            find->llink->rlink = find->rlink;
+            find->rlink->llink = find->llink;
+            free(find); // find 앞뒤 노드들이 서로를 가리키게 하고,
+            return 0;   // 자신은 할당 해제한다.
+        }
+        find = find->rlink; // 값이 같지 않으면, 다음 노드로 이동한다.
+    }
+    printf("There is no key.\n"); // 다 돌아봐도 없으면, 실패를 출력한다.
     return 0;
 }
