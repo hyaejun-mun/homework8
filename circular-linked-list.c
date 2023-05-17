@@ -133,6 +133,11 @@ int initialize(listNode **h)
 /* 메모리 해제 */
 int freeList(listNode *h)
 {
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
     listNode *p = h->rlink; // 다음 노드를 가리키는 포인터.
     listNode *back = p;     // 동적 할당을 풀어줄 포인터.
     while (p != h)          // 하나씩 이동하면서 풀어준다.
@@ -188,6 +193,11 @@ void printList(listNode *h)
  */
 int insertLast(listNode *h, int key)
 {
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
     listNode *p = (listNode *)malloc(sizeof(listNode)); // 삽입할 노드 추가
     p->key = key;
     p->rlink = h; // 마지막이므로, h와 마지막 노드 사이에 삽입한다.
@@ -202,6 +212,11 @@ int insertLast(listNode *h, int key)
  */
 int deleteLast(listNode *h)
 {
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
     if (h->rlink == h) // 리스트가 비었으면 원소를 삭제할 수 없다.
     {
         printf("List is empty.\n");
@@ -220,6 +235,11 @@ int deleteLast(listNode *h)
  */
 int insertFirst(listNode *h, int key)
 {
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
     // 리스트에 삽입할 노드 생성
     listNode *p = (listNode *)malloc(sizeof(listNode));
     p->key = key;        // 노드 값 생성, 첫 번째 위치에 삽입되기 위해
@@ -235,6 +255,11 @@ int insertFirst(listNode *h, int key)
  */
 int deleteFirst(listNode *h)
 {
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
     if (h->rlink == h) // 리스트가 비었으면 원소를 삭제할 수 없다.
     {
         printf("List is empty.\n");
@@ -246,7 +271,6 @@ int deleteFirst(listNode *h)
     p->rlink->llink = p->llink;
     free(p); // 리스트의 다른 노드들의 정리가 끝났으면, 선택한 노드를 해제한다.
     return 1;
-    return 1;
 }
 
 /**
@@ -254,7 +278,34 @@ int deleteFirst(listNode *h)
  */
 int invertList(listNode *h)
 {
-
+    if (h == NULL) // 선언되지 않으면 실행할 수 없다.
+    {
+        printf("no list.\n");
+        return 0;
+    }
+    if (h->rlink == h) // 원소가 없으면 역순배치할 수 없다.
+    {
+        printf("list is empty.\n");
+        return 0;
+    }
+    if (h->rlink->rlink == h) // 원소가 하나면 역순배치해도 의미가 없다.
+    {
+        printf("there is only one element.");
+        return 0;
+    }
+    listNode *p = h;           // 다음 노드를 가리키는 노드
+    listNode *turn = h->llink; // 링크를 변경할 노드를 가리키는 노드.
+                               // 처음 시작시, 이전 노드가 마지막 노드가 되도록 하기 위해
+                               // h->llink로 초기화한다.
+    listNode *back = NULL;     // 이전 노드를 가리키는 노드
+    while (turn->llink != h)   // 마지막 원소까지 변경했으면 종료한다.
+    {                          // 여기서, 모든 역순배치가 끝났으면 마지막 원소 변경이 끝났을 때
+        back = turn;           // p->rlink가 아닌, p->llink가 h를 가리킴에 유의하자.
+        turn = p;              // p의 시작값이 h이므로, p != h는 while 조건문으로 사용될 수 없다.
+        p = p->rlink;          // 바로 종료되기 때문이다.
+        turn->rlink = back;
+        turn->llink = p;
+    }
     return 0;
 }
 
