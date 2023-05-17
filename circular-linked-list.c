@@ -220,7 +220,13 @@ int deleteLast(listNode *h)
  */
 int insertFirst(listNode *h, int key)
 {
-
+    // 리스트에 삽입할 노드 생성
+    listNode *p = (listNode *)malloc(sizeof(listNode));
+    p->key = key;        // 노드 값 생성, 첫 번째 위치에 삽입되기 위해
+    p->rlink = h->rlink; // 좌 링크는 head, 우 링크는 첫 번째 원소를 가리킴.
+    p->llink = h;
+    p->rlink->llink = p; // 그 후, 첫 번째 원소의 좌 링크와 head의 우 링크가
+    h->rlink = p;        // 삽입할 노드를 가리키게 함.
     return 1;
 }
 
@@ -229,7 +235,17 @@ int insertFirst(listNode *h, int key)
  */
 int deleteFirst(listNode *h)
 {
-
+    if (h->rlink == h) // 리스트가 비었으면 원소를 삭제할 수 없다.
+    {
+        printf("List is empty.\n");
+        return 0;
+    }
+    listNode *p = h->rlink; // h->rlink가 가리키는 노드가 마지막 노드이다.
+                            // p의 왼쪽 노드와 오른쪽 노드가 서로를 가리키게 해 준다.
+    p->llink->rlink = p->rlink;
+    p->rlink->llink = p->llink;
+    free(p); // 리스트의 다른 노드들의 정리가 끝났으면, 선택한 노드를 해제한다.
+    return 1;
     return 1;
 }
 
